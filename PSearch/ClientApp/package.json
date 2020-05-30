@@ -1,0 +1,67 @@
+{
+  "name": "psearch",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "babel-eslint": "10.0.1",
+    "bootstrap": "^4.1.3",
+    "bootswatch": "^4.4.1",
+    "jquery": "^3.4.1",
+    "leaflet": "^1.6.0",
+    "merge": "^1.2.1",
+    "oidc-client": "^1.9.0",
+    "react": "^16.0.0",
+    "react-awesome-slider": "^4.1.0",
+    "react-dom": "^16.0.0",
+    "react-flv-player": "^1.0.9",
+    "react-grid-gallery": "^0.5.5",
+    "react-icons": "^3.10.0",
+    "react-image-gallery": "^1.0.7",
+    "react-leaflet": "^2.6.1",
+    "react-loader-spinner": "^3.1.14",
+    "react-loading-overlay": "^1.0.1",
+    "react-notifications-component": "^2.3.0",
+    "react-player": "^2.0.1",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "^3.0.1",
+    "react-spinners": "^0.8.3",
+    "reactjs-image-gallery": "^1.1.3",
+    "reactstrap": "^6.3.0",
+    "rimraf": "^2.6.2",
+    "video-react": "^0.14.1"
+  },
+  "devDependencies": {
+    "ajv": "^6.9.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.12.0",
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "^2.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.11.1",
+    "typescript": "^3.5.2"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "start": "rimraf ./build && react-scripts start",
+    "build": "react-scripts build",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src/"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
