@@ -5,16 +5,21 @@ import request from './api-requests/Request'
 import Loader from 'react-loader-spinner'
 import { FcHighPriority } from 'react-icons/fc'
 import { ReactFlvPlayer } from 'react-flv-player'
+import { store } from 'react-notifications-component';
 
 export class Video extends Component {
     static displayName = Video.name;
     constructor(props) {
         super(props);
-        this.state = { connecting: true, phoneAvailable: false }
+        this.state = { connecting: true, phoneAvailable: false,recoring:false, }
   //      this.state = { connecting: false, phoneAvailable: true}
 
         this.sendRequest = this.sendRequest.bind(this)
         this.tryAgain = this.tryAgain.bind(this)
+        this.record = this.record.bind(this)
+
+        this.stopRecord = this.stopRecord.bind(this)
+
         this.checkLiveStream = this.checkLiveStream.bind(this)
 
     }
@@ -22,15 +27,39 @@ export class Video extends Component {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.liveVideoRequest(deviceId);
         if (resp.status == 200) {
-           // this.checkLiveStream();
+           //this.checkLiveStream();
         }
         else
             this.setState({ phoneAvailable: false, connecting:false });
     }
     componentDidMount() {
-       // this.checkLiveStream()
+        this.sendRequest()
 
-       this.sendRequest()
+       this.checkLiveStream()
+    }
+    async record() {
+        let deviceId = this.props.match.params.deviceId
+        let resp = await request.record(deviceId);
+        if (resp.status == 200) {
+            this.setState({ vidId: resp.data.videoId, recoring: true })
+            this.showNotification("Recording Video"," ","success")
+        }
+        else {
+            this.showNotification("Unable to start recording", " ", "danger")
+
+        }
+    }
+    async stopRecord() {
+        let deviceId = this.props.match.params.deviceId
+        let resp = await request.stopRecord(deviceId,this.state.vidId);
+        if (resp.status == 200) {
+            this.setState({ recoring: false })
+            this.showNotification("Recording Stopped", " ", "success")
+        }
+        else {
+            this.showNotification("Error", " ", "danger")
+
+        }
     }
     tryAgain() {
         this.setState({ connecting: true })
@@ -46,6 +75,21 @@ export class Video extends Component {
         setTimeout(() => {
             clearInterval(timerId); if (this.state.connecting === true) { this.setState({ connecting: false, phoneAvailable:false }) }
         }, 10000)
+    }
+    showNotification(title, message, type) {
+        store.addNotification({
+            title: title,
+            message: message,
+            type: type,
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animated", "fadeIn"],
+            animationOut: ["animated", "fadeOut"],
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+        });
     }
     render() {
         if (this.state.connecting) {
@@ -66,6 +110,12 @@ export class Video extends Component {
             )
         }
         else {
+            let b;
+            if (this.state.recoring)
+                b = <Button onClick={this.stopRecord} style={{ marginTop: 10 }} color="danger" >Stop Recording</Button>
+            else
+                b = <Button onClick={this.record} style={{ marginTop: 10 }} color="danger" >Record</Button>
+
             return (
                 <div style={{ textAlign: "right" }}>
 
@@ -77,7 +127,8 @@ export class Video extends Component {
                     width="100%"
                         isMuted={true}
                     />
-                    <Button style={{ marginTop: 10 }} color="danger" >Record</Button>
+
+                    {b}
 
                 </div>
             );

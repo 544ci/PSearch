@@ -123,7 +123,7 @@ export class Phones extends Component {
                                     <DropdownItem onClick={() => { this.showResetPhoneModal(phone) }}>Reset Phone</DropdownItem>
                                     <Link to={`gallery/${phone.deviceId}`}><DropdownItem>Intruders</DropdownItem></Link>
                                     <Link to={`live/${phone.deviceId}`}><DropdownItem>Live Video</DropdownItem></Link>
-                                    <DropdownItem>Recorded Videos</DropdownItem>
+                                    <Link to={`videos/${phone.deviceId}`}><DropdownItem>Recorded Videos</DropdownItem></Link>
                                     <DropdownItem divider />
                                     <DropdownItem className="text-info" header>Information</DropdownItem>
                                     <Link to={`Messages/${phone.deviceId}`}><DropdownItem>Messages</DropdownItem></Link>

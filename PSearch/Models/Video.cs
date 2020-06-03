@@ -11,7 +11,7 @@ namespace PSearch.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string PhoneRefId { get; set; }
         public bool Saved { get; set; }

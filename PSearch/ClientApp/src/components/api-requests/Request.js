@@ -7,6 +7,11 @@ class requests {
         return this.makeRequest(url, "get", {})
     }
 
+    static getVideos(deviceId) {
+        const url = "api/videos/" + deviceId
+        return this.makeRequest(url, "get", {})
+    }
+
     static getLocations(deviceId) {
         const url = "api/Locations/" + deviceId
         return this.makeRequest(url, "get", {})
@@ -56,7 +61,14 @@ class requests {
         const url = "api/requests/liveStream/" + deviceId
         return this.makeRequest(url, "get", {})
     } 
-    
+    static record(deviceId) {
+        const url = "api/videos/record/" + deviceId
+        return this.makeRequest(url, "post", {})
+    } 
+    static stopRecord(deviceId,vidId) {
+        const url = "api/videos/stoprecord/" + deviceId + "/" +vidId
+        return this.makeRequest(url, "post", {})
+    } 
     static async  makeRequest(url, method, body) {
         const token = await authService.getAccessToken();
         console.log(token)

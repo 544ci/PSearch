@@ -78,7 +78,8 @@ namespace PSearch.Controllers
                 if (r.RequestId != 3)
                 {
                     r.Status = 2;
-                    _context.Request.Update(r);
+                    _context.Update(r);
+                    _context.SaveChanges();
                 }
 }
             return Ok(new { requests });
@@ -132,7 +133,7 @@ namespace PSearch.Controllers
 
                 if (req.Status == 1)
                     if (ValidRequest(request))
-                    {
+                    { 
                         updateRequest(req);
                         return Ok("{\"message\": \"" + getRequestName(request.RequestId) + " Request Queued\"}");
                     }
@@ -142,6 +143,12 @@ namespace PSearch.Controllers
                         return BadRequest("{\"message\": \"Phone not Encrypted\"}");
                 else if (req.Status == 2)
                 {
+                    if (req.RequestId == 6)
+                    {
+                        req.Status = 1;
+                        updateRequest(req);
+                        return Ok();
+                    }
                     return Ok("{\"message\": \"" + getRequestName(request.RequestId) + " Request Sent To Phone\"}");
                 }
                 else if (req.Status == 3)
@@ -163,8 +170,6 @@ namespace PSearch.Controllers
                 }
                 else
                 {
-
-
                     if (ValidRequest(request))
                     {
                         req.Status = 1;

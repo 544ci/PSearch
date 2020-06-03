@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PSearch.Data;
 
 namespace PSearch.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530212132_Video1")]
+    partial class Video1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,33 +320,6 @@ namespace PSearch.Migrations
                     b.HasKey("PhoneRefId", "RequestId");
 
                     b.ToTable("Request");
-                });
-
-            modelBuilder.Entity("PSearch.Models.Video", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan>("End")
-                        .HasColumnType("time");
-
-                    b.Property<string>("PhoneRefId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Saved")
-                        .HasColumnType("bit");
-
-                    b.Property<TimeSpan>("Start")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Video");
                 });
 
             modelBuilder.Entity("PSearchAPI.Models.CallLog", b =>
