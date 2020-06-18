@@ -99,7 +99,7 @@ export class Phones extends Component {
     }
     renderPhones(phones) {
         if (phones.length === 0) {
-            return (<p className="text-danger">You have not added any phone.</p>)
+            return (<p className = "text-danger" > You have not added any phone.< br /> Install app on your phone and login through that app to add your phone.</p>)
         }
         let phoneCards = phones.map((phone, index) => {
             return (

@@ -8,6 +8,7 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <StartupObject>PSearch.Program</StartupObject>
+    <UserSecretsId>cece75cb-a91a-4a37-a4ea-4c259b3aa8c7</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

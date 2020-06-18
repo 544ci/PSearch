@@ -1,1 +1,12 @@
 
+hr {
+    border: 0;
+    clear: both;
+    display: block;
+    width: 96%;
+    background-color: #FFFFFF;
+    height: 1px;
+}
+.bodySize{
+    min-height: 700px;
+}

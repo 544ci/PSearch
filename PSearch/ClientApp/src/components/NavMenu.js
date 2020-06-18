@@ -30,7 +30,7 @@ export class NavMenu extends Component {
                 <Container>
                     <NavbarBrand>
                         <img
-                            src={require("../logo.svg")}
+                            src={require("../icons/logo.svg")}
                             width="30"
                             height="30"
                             className="d-inline-block align-top"
