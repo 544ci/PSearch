@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import authService from './api-authorization/AuthorizeService'
 import request from './api-requests/Request'
 import { Table, Button } from "reactstrap"
 import { store } from 'react-notifications-component';
@@ -20,7 +19,7 @@ export class Calllogs extends Component {
   }
 
     renderCallLogs(callLogs) {
-        if (callLogs.length == 0)
+        if (callLogs.length === 0)
             return <div>                <div style={{ textAlign: "right" }}><Button color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
  <p className="text-danger">No call logs available</p></div>
         console.log(callLogs)
@@ -63,7 +62,7 @@ export class Calllogs extends Component {
     async getCallLogs() {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.getCallLogs(deviceId);
-        if (resp.status == 200)
+        if (resp.status === 200)
             this.setState({ callLogs: resp.data, loading: false });
         else 
             this.setState({ loading: false });
@@ -71,7 +70,7 @@ export class Calllogs extends Component {
     async requestUpdate() {
         let deviceId = this.props.match.params.deviceId
         let data = await request.updateCalllogsRequest(deviceId)
-        if (data.status == 200)
+        if (data.status === 200)
             this.showNotification("Call Logs update request queued", " ", "success")
         else
             this.showNotification("Call Logs update reqyest failed", " ", "danger")

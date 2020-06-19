@@ -1,13 +1,10 @@
 ﻿import React, { Component } from 'react';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import request from './api-requests/Request'
-import Loader from 'react-loader-spinner'
 import { FcStart } from 'react-icons/fc'
-import { ReactFlvPlayer } from 'react-flv-player'
 import { store } from 'react-notifications-component';
-import VideoPlayer from 'simple-react-video-thumbnail'
 import ModalVideo from 'react-modal-video'
-import { Card, CardBody, Row, Col, CardTitle, CardFooter, CardText, Button, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Container, Modal, ModalHeader, ModalBody, ModalFooter, CardImg } from 'reactstrap';
+import { Card, CardBody, Row, Col,  CardFooter, CardText, Container} from 'reactstrap';
 import Moment from 'react-moment';
 
 import 'react-modal-video/scss/modal-video.scss';
@@ -103,7 +100,7 @@ export class RecordedVideo extends Component {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.getVideos(deviceId);
         console.log(resp.data)
-        if (resp.status == 200)
+        if (resp.status === 200)
             this.setState({ videos: resp.data, loading: false });
         else
             this.setState({ loading: false });

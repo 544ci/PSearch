@@ -26,7 +26,7 @@ export class Video extends Component {
     async sendRequest() {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.liveVideoRequest(deviceId);
-        if (resp.status == 200) {
+        if (resp.status === 200) {
            //this.checkLiveStream();
         }
         else
@@ -40,7 +40,7 @@ export class Video extends Component {
     async record() {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.record(deviceId);
-        if (resp.status == 200) {
+        if (resp.status === 200) {
             this.setState({ vidId: resp.data.videoId, recoring: true })
             this.showNotification("Recording Video"," ","success")
         }
@@ -52,7 +52,7 @@ export class Video extends Component {
     async stopRecord() {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.stopRecord(deviceId,this.state.vidId);
-        if (resp.status == 200) {
+        if (resp.status === 200) {
             this.setState({ recoring: false })
             this.showNotification("Recording Stopped", " ", "success")
         }
@@ -69,7 +69,7 @@ export class Video extends Component {
         let timerId  = setInterval(async () => {
             let resp = await request.checkLiveStream(this.props.match.params.deviceId);
             console.log(resp)
-            if (resp.status == 200 && !this.state.streamURL)
+            if (resp.status === 200 && !this.state.streamURL)
                 this.setState({ connecting: false,  phoneAvailable: true, streamURL: resp.data.url })
         }, 1000)
         setTimeout(() => {

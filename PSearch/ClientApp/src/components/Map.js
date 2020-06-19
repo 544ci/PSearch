@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Map as LeafletMap, Marker, Popup, TileLayer } from "react-leaflet";
-import { Container, Col, Row, ListGroup, ListGroupItemHeading, ListGroupItemText, ListGroupItem } from "reactstrap"
+import { Container, Col, Row, ListGroup, ListGroupItemText, ListGroupItem } from "reactstrap"
 import '../custom.css';
 import request from './api-requests/Request'
 import L from "leaflet";
@@ -14,15 +14,9 @@ const style = {
 };
 const style1 = {
     overflowY: "scroll",
-    height: "620px",
-    overflowY: "scroll"
-
-
-
+    height: "620px"
 };
-const scrollBarStyle = {
 
-}
 const iconPerson = new L.Icon({
   iconUrl: require("../icons/marker1.png"),
   iconRetinaUrl: require("../icons/marker1.png"),
@@ -87,7 +81,7 @@ export class Map extends Component {
     async getLocations() {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.getLocations(deviceId);
-        if (resp.status == 200) {
+        if (resp.status === 200) {
             this.setState({ locations: resp.data })
         }
     }

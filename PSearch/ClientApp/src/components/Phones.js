@@ -30,13 +30,6 @@ export class Phones extends Component {
   componentDidMount() {
     this.populatePhones();
     }
-
-    decryptPhone() {
-
-    }
-    resetPhone() {
-
-    }
     showNotification(title,message,type) {
         store.addNotification({
             title: title,
@@ -161,14 +154,14 @@ export class Phones extends Component {
 
     async populatePhones() {
         let resp = await request.getPhones();
-        if (resp.status == 200)
+        if (resp.status === 200)
             this.setState({ phones: resp.data, loading: false });
         else
             this.setState({ loading: false });
     }
     async encryptPhone(deviceId) {
         let data = await request.encryptPhone(this.state.phoneSelected);
-        if (data.status == 200)
+        if (data.status === 200)
             this.showNotification(data.data.message, " ", "success")
         else 
             this.showNotification(data.data.message, " ", "danger")
@@ -177,7 +170,7 @@ export class Phones extends Component {
     }
     async decryptPhone(deviceId) {
         let data = await request.decryptPhone(this.state.phoneSelected);
-        if (data.status == 200)
+        if (data.status === 200)
             this.showNotification(data.data.message, " ", "success")
         else
             this.showNotification(data.data.message, " ", "danger")
@@ -186,7 +179,7 @@ export class Phones extends Component {
     }
     async resetPhone(deviceId) {
         let data = await request.resetPhone(this.state.phoneSelected);
-        if (data.status == 200)
+        if (data.status === 200)
             this.showNotification(data.data.message, " ", "success")
         else
             this.showNotification(data.data.message, " ", "danger")
@@ -194,7 +187,7 @@ export class Phones extends Component {
     }
     async removePhone(deviceId) {
         let data = await request.removePhone(this.state.phoneSelected);
-        if (data.status == 200)
+        if (data.status === 200)
             this.showNotification(data.data.message, " ", "success")
         else
             this.showNotification(data.data.message, " ", "danger")

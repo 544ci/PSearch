@@ -20,7 +20,7 @@ export class IntruderGallery extends React.Component {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.getImages(deviceId);
         console.log(resp)
-        if (resp.status == 200) 
+        if (resp.status === 200) 
             this.format(resp.data);
         
     }
