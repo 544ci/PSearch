@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +26,13 @@ namespace PSearch.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ApplicationDbContext _context;
-        public UserManagementController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public UserManagementController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             this._signInManager = signInManager;
             this._userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
             _context = context;
 
         }
@@ -42,7 +48,6 @@ namespace PSearch.Controllers
                 return BadRequest();
 
             return Ok();
-
         }
         [HttpPost("signin")]
         public async Task<IActionResult> login([FromBody]userManagement user)
@@ -55,6 +60,10 @@ namespace PSearch.Controllers
             var signInResult = await _signInManager.CheckPasswordSignInAsync(u, user.Password, false);
             if (!signInResult.Succeeded)
                 return BadRequest();
+            if (phoneInUse(user.DeviceId))
+                if (!userOwnsPhone(u.Id, user.DeviceId))
+                    return Unauthorized();
+            
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTConstants.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -73,7 +82,8 @@ namespace PSearch.Controllers
                 expiration = token.ValidTo
             };
             var usr = await _userManager.FindByEmailAsync(user.Email);
-            var phone = new Phone() { DeviceId=user.DeviceId ,Model=user.Model,Manufacturer=user.Manufacturer,UserRef=usr.Id };
+            
+            var phone = new Phone() { DeviceId=user.DeviceId ,Model=user.Model,Manufacturer=user.Manufacturer,UserRef=usr.Id, EncryptionKey=getKey() };
             try
             {
                 _context.Add(phone);
@@ -81,11 +91,43 @@ namespace PSearch.Controllers
             }
             catch(DbUpdateException ex)
             {
-
-            }
-            return Created("", result);
-
                 
+            }
+            return Created("", result); 
+        }
+        [HttpGet("getEncryptionKey/{id}")]
+        [Authorize(AuthenticationSchemes = JWTConstants.AuthSchemes)]
+        public  IActionResult getEncryptionKey(string id)
+        {
+            String userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            String usrId = _context.Users.First(e => e.Email == userId).Id;
+            if (userOwnsPhone(usrId,id))
+            {
+                string encryptionKey = _context.Phone.First(p => p.DeviceId.Equals(id)).EncryptionKey;
+                return Ok(new { encryptionKey });
+            }
+            else
+                return Unauthorized();
+        }
+
+        private String getKey()
+        {
+            var random = new Random();
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            char[] key = new char[32];
+            for (int i = 0; i < 32; i++)
+            {
+                key[i] = chars[random.Next(0,chars.Length)];
+            }
+            return new string(key);
+        }
+        private bool userOwnsPhone(string userId, string phoneId)
+        {
+           return _context.Phone.Any(p => p.UserRef.Equals(userId) && p.DeviceId.Equals(phoneId));
+        }
+        private bool phoneInUse(string phoneId)
+        {
+            return _context.Phone.Any(p=> p.DeviceId.Equals(phoneId));
         }
     }
 }

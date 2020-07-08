@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import request from './api-requests/Request'
 import { Table, Button } from "reactstrap"
 import { store } from 'react-notifications-component';
+import Moment from 'react-moment';
 
 export class Messages extends Component {
 
@@ -20,14 +21,14 @@ export class Messages extends Component {
 
     renderMessages(messages) {
         if (messages.length === 0) {
-            return <div><div style={{textAlign:"right"}}><Button color="primary" onClick={this.requestUpdate}>Request Update</Button></div><p className="text-danger">No Messages available</p></div>
+            return <div><div style={{ textAlign: "right" }}><Button style={{ marginBottom: 10 }} color="primary" onClick={this.requestUpdate}>Request Update</Button></div><p className="text-danger">No Messages available</p></div>
         }
-        let rows = messages.map((value, index) => (<tr><td>{index+1}</td><td>{value.message}</td> <td>{value.date}</td></tr>))
+        let rows = messages.map((value, index) => (<tr key={index}><td>{index + 1}</td><td>{value.message}</td><td><Moment>{value.date}</Moment></td></tr>))
 
         return (
             <div>
-                <div style={{ textAlign: "right" }}><Button color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
-                <Table hover>
+                <div style={{ textAlign: "right" }}><Button style={{ marginBottom: 10 }} color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
+                <Table bordered hover>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -51,7 +52,7 @@ export class Messages extends Component {
 
     return (
       <div>
-            <h1 id="tabelLabel" class="text-info" >Messages</h1>
+            <h1 id="tabelLabel" className="text-info" >Messages</h1>
             {contents}
       </div>
     );

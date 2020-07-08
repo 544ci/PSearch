@@ -49,7 +49,7 @@ export class RecordedVideo extends Component {
     render() {
         //return (
         //    <div>
-        //        <ModalVideo channel='custom' isOpen={this.state.isOpen} url="http://192.168.10.38:5000/videos/4fb7f535-c30e-4b24-bddd-0f8ed0d37a88.mp4" onClose={() => this.setState({ isOpen: false })} />
+        //        <ModalVideo channel='custom' isOpen={this.state.isOpen} url="http://localhost:5000/videos/4fb7f535-c30e-4b24-bddd-0f8ed0d37a88.mp4" onClose={() => this.setState({ isOpen: false })} />
         //    <button onClick={this.openModal}>Open</button>
         //    </div>     
         //)
@@ -60,7 +60,7 @@ export class RecordedVideo extends Component {
 
         return (
             <div>
-                <h1 id="tabelLabel" className="text-info" >Your Phones</h1>
+                <h1 id="tabelLabel" className="text-info" >Your Recorded Videos</h1>
                 <p>Select a phone to monitor.</p>
                 {contents}
                 <ModalVideo channel='custom' isOpen={this.state.isOpen} url={this.state.selectedVideoUrl} onClose={() => this.setState({ isOpen: false })} />

@@ -9,15 +9,15 @@ import { store } from 'react-notifications-component';
 
 export class Video extends Component {
     static displayName = Video.name;
+    ksTimer = " ";
     constructor(props) {
         super(props);
-        this.state = { connecting: true, phoneAvailable: false,recoring:false, }
+        this.state = { connecting: true, phoneAvailable: false,recording:false,firstTime:true }
   //      this.state = { connecting: false, phoneAvailable: true}
 
         this.sendRequest = this.sendRequest.bind(this)
         this.tryAgain = this.tryAgain.bind(this)
         this.record = this.record.bind(this)
-
         this.stopRecord = this.stopRecord.bind(this)
 
         this.checkLiveStream = this.checkLiveStream.bind(this)
@@ -27,21 +27,30 @@ export class Video extends Component {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.liveVideoRequest(deviceId);
         if (resp.status === 200) {
-           //this.checkLiveStream();
+           this.checkLiveStream();
         }
         else
             this.setState({ phoneAvailable: false, connecting:false });
     }
-    componentDidMount() {
-        this.sendRequest()
+    async componentDidMount() {
+        //this.sendRequest()
+        //window.addEventListener("beforeunload", this.stopStream)
 
-       this.checkLiveStream()
+
+        let resp = await request.checkLiveStream(this.props.match.params.deviceId);
+        console.log(resp)
+        if (resp.status === 200 && !this.state.streamURL)
+            this.setState({ connecting: false, phoneAvailable: true, streamURL: resp.data.url })
+        else {
+            this.sendRequest();
+            this.checkLiveStream();
+        }
     }
     async record() {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.record(deviceId);
         if (resp.status === 200) {
-            this.setState({ vidId: resp.data.videoId, recoring: true })
+            this.setState({ vidId: resp.data.videoId, recording: true })
             this.showNotification("Recording Video"," ","success")
         }
         else {
@@ -53,7 +62,7 @@ export class Video extends Component {
         let deviceId = this.props.match.params.deviceId
         let resp = await request.stopRecord(deviceId,this.state.vidId);
         if (resp.status === 200) {
-            this.setState({ recoring: false })
+            this.setState({ recording: false })
             this.showNotification("Recording Stopped", " ", "success")
         }
         else {
@@ -63,18 +72,24 @@ export class Video extends Component {
     }
     tryAgain() {
         this.setState({ connecting: true })
+        //this.sendRequest();
         this.checkLiveStream()
     }
     async checkLiveStream() {
         let timerId  = setInterval(async () => {
             let resp = await request.checkLiveStream(this.props.match.params.deviceId);
             console.log(resp)
-            if (resp.status === 200 && !this.state.streamURL)
-                this.setState({ connecting: false,  phoneAvailable: true, streamURL: resp.data.url })
-        }, 1000)
+            if (resp.status === 200 && !this.state.streamURL) {
+                this.setState({ connecting: false, phoneAvailable: true, streamURL: resp.data.url })
+                this.ksTimer = setInterval(() => { this.keepStreaming() },2000)
+            }
+        }, 2000)
         setTimeout(() => {
-            clearInterval(timerId); if (this.state.connecting === true) { this.setState({ connecting: false, phoneAvailable:false }) }
-        }, 10000)
+            clearInterval(timerId);
+            if (this.state.connecting) {
+                this.setState({ connecting: false, phoneAvailable: false })
+            }
+        }, 15000)
     }
     showNotification(title, message, type) {
         store.addNotification({
@@ -90,6 +105,10 @@ export class Video extends Component {
                 onScreen: true
             }
         });
+    }
+    keepStreaming() {
+        console.log("Keep Streaming")
+        request.keepStreaming(this.props.match.params.deviceId);
     }
     render() {
         if (this.state.connecting) {
@@ -111,7 +130,7 @@ export class Video extends Component {
         }
         else {
             let b;
-            if (this.state.recoring)
+            if (this.state.recording)
                 b = <Button onClick={this.stopRecord} style={{ marginTop: 10 }} color="danger" >Stop Recording</Button>
             else
                 b = <Button onClick={this.record} style={{ marginTop: 10 }} color="danger" >Record</Button>
@@ -133,5 +152,13 @@ export class Video extends Component {
                 </div>
             );
         }
+    }
+    componentWillUnmount() {
+        this.stopStream()
+    }
+    stopStream() {
+        console.log("stopSTream");
+        if (this.ksTimer !== " ")
+            clearInterval(this.ksTimer)
     }
 }

@@ -12,6 +12,7 @@ import { Dashboard } from './components/Dashboard';
 import { Phones } from './components/Phones';
 import { Video } from './components/Video'
 import { RecordedVideo } from './components/RecordedVideo'
+import { Requests } from './components/Requests'
 
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
@@ -32,9 +33,10 @@ export default class App extends Component {
         <AuthorizeRoute exact path='/location/:deviceId' component={Map} />
         <AuthorizeRoute exact path='/messages/:deviceId' component={Messages} />
         <AuthorizeRoute exact path='/calllogs/:deviceId' component={Calllogs} />
-            <AuthorizeRoute exact path='/gallery/:deviceId' component={IntruderGallery} />
-            <AuthorizeRoute exact path='/videos/:deviceId' component={RecordedVideo} />
+        <AuthorizeRoute exact path='/gallery/:deviceId' component={IntruderGallery} />
+        <AuthorizeRoute exact path='/videos/:deviceId' component={RecordedVideo} />
         <AuthorizeRoute exact path='/live/:deviceId' component={Video} />
+        <AuthorizeRoute exact path='/history/:deviceId' component={Requests} />
 
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </Layout>

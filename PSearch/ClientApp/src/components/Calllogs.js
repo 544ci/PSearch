@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import request from './api-requests/Request'
 import { Table, Button } from "reactstrap"
 import { store } from 'react-notifications-component';
+import Moment from 'react-moment';
 
 export class Calllogs extends Component {
 
@@ -20,15 +21,15 @@ export class Calllogs extends Component {
 
     renderCallLogs(callLogs) {
         if (callLogs.length === 0)
-            return <div>                <div style={{ textAlign: "right" }}><Button color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
+            return <div>                <div style={{ textAlign: "right" }}><Button style={{ marginBottom: 10 }} color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
  <p className="text-danger">No call logs available</p></div>
         console.log(callLogs)
-        let rows = callLogs.map((value, index) => (<tr><td>{index+1}</td><td>{value.call_to}</td>  <td>{value.duration}</td> <td>{value.status}</td> <td>{value.date}</td></tr>))
+        let rows = callLogs.map((value, index) => (<tr key={index}><td>{index + 1}</td><td>{value.call_to}</td><td>{value.duration}</td><td>{value.status}</td><td><Moment>{value.date}</Moment></td></tr>))
 
         return (
             <div>
-                <div style={{ textAlign: "right" }}><Button color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
-        <Table hover>
+                <div style={{ textAlign: "right" }}><Button style={{ marginBottom:10 }} color="primary" onClick={this.requestUpdate}>Request Update</Button></div>
+                <Table bordered hover>
             <thead>
                 <tr>
                     <th>#</th>

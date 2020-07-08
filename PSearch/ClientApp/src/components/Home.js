@@ -32,7 +32,7 @@ export class Home extends Component {
               </Container>
               <hr />
 
-              <Row style={{ marginTop:200 }}>
+              <Row style={{ marginTop:75 }}>
 
                   <Container>
                       <Row>

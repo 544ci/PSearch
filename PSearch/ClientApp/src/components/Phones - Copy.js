@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import { Card, CardBody, Row,  CardTitle, CardSubtitle, CardText, CardDeck, Button, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Container, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Card, CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Button, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Container, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import request from './api-requests/Request'
 import { store } from 'react-notifications-component';
 
@@ -96,8 +96,9 @@ export class Phones extends Component {
         }
         let phoneCards = phones.map((phone, index) => {
             return (
-                <Card key={Math.random()} color="secondary" >
-                        <CardBody>
+                <Col style={{ marginBottom: 30 }} id={index} key={index} sm="3">
+                    <Card style={{ minHeight: 250 , minWidth:250 }} color = "secondary" >
+                        <CardBody style={{ height: "100%", width: "100%" }}>
                             <CardTitle><b className="text-info">Manufacturer</b>: {phone.manufacturer}</CardTitle>
                             <CardSubtitle><b className="text-info">Model</b>: {phone.model}</CardSubtitle>
                             <CardText><b className="text-info">Device Id</b>: {phone.deviceId}</CardText>
@@ -127,7 +128,8 @@ export class Phones extends Component {
                                 </DropdownMenu>
                             </UncontrolledButtonDropdown>
                         </CardBody>
-                        </Card>
+                    </Card>
+                </Col>
             )
         }
             )
@@ -137,10 +139,10 @@ export class Phones extends Component {
 
   render() {
     let contents = this.state.loading
-        ? <p><em>Loading...</em></p>
-        : <CardDeck>{this.renderPhones(this.state.phones)}</CardDeck>;
+      ? <p><em>Loading...</em></p>
+      : this.renderPhones(this.state.phones);
 
-        return (
+    return (
         <div>
             <h1 id="tabelLabel" className="text-info" >Your Phones</h1>
         <p>Select a phone to monitor.</p>

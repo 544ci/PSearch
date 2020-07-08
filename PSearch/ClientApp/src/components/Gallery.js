@@ -26,11 +26,12 @@ export class IntruderGallery extends React.Component {
     }
 
     format(response){
-        let images=[]
+        let images = []
+        console.log(window.location.hostname + ":" + window.location.port + "/images/");
         response.forEach(element => {
             images.push({
-                src: "http://localhost:3581/images/"+element.imageName,
-                thumbnail: "http://localhost:3581/images/" + element.imageName,
+                src: "http://localhost:3580/images/"+element.imageName,
+                thumbnail: "http://localhost:3580/images/" + element.imageName,
                 thumbnailWidth: 320,
                 thumbnailHeight: 320,
                 isSelected: false,

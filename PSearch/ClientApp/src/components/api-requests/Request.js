@@ -25,6 +25,10 @@ class requests {
         const url = "api/sms/" + deviceId
         return this.makeRequest(url, "get", {})
     }
+    static getRequests(deviceId) {
+        const url = "api/requests/allRequests/" + deviceId
+        return this.makeRequest(url, "get", {})
+    }
     static getImages(deviceId) {
         const url = "api/image/" + deviceId
         return this.makeRequest(url, "get", {})
@@ -56,6 +60,10 @@ class requests {
     static liveVideoRequest(deviceId) {
         const url = "api/requests/" + deviceId
         return this.makeRequest(url, "post", { PhoneRefId: deviceId, RequestId: 6, Status: 1 })
+    }
+    static keepStreaming(deviceId) {
+        const url = "api/requests/streamStatus/" + deviceId
+        return this.makeRequest(url, "post", {})
     } 
     static checkLiveStream(deviceId) {
         const url = "api/requests/liveStream/" + deviceId
@@ -92,7 +100,12 @@ class requests {
             });
 
             if (response) {
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (ex) {
+
+                }
                 return { data: data, status: response.status };
 
             }

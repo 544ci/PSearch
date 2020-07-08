@@ -36,7 +36,7 @@ namespace PSearch.Controllers
             bool userOwnsPhone = _context.Phone.Any(p => p.DeviceId.Equals(phoneId) && p.UserRef.Equals(userId));
             if (!userOwnsPhone)
                 return (Unauthorized());
-            return await _context.Video.Where(v=>v.PhoneRefId.Equals(phoneId)&&v.Saved==true).Select(v=>new Vid {date=v.Date , Url= "http://192.168.10.39:5000/videos/"+v.Id+".mp4" }).ToListAsync();
+            return await _context.Video.Where(v=>v.PhoneRefId.Equals(phoneId)&&v.Saved==true).Select(v=>new Vid {date=v.Date , Url= "http://localhost:5000/videos/"+v.Id+".mp4" }).ToListAsync();
         }
 
 

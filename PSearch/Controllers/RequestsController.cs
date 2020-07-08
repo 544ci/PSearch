@@ -33,6 +33,7 @@ namespace PSearch.Controllers
         }
 
         // GET: api/Requests
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequest()
         {
@@ -55,6 +56,19 @@ namespace PSearch.Controllers
                 return NoContent();
             }
         }
+
+        [Authorize]
+        [HttpGet("allRequests/{phoneId}")]
+        public ActionResult<Object> allRequests(string phoneId)
+        {
+            bool phoneExists = _context.Phone.Any(p => p.UserRef == userId && p.DeviceId == phoneId);
+            if (!phoneExists)
+                return NotFound();
+            var reqs = _context.Request.Where(e => e.PhoneRefId.Equals(phoneId)).ToList();
+            return Ok(reqs);
+        }
+
+
         [Authorize(AuthenticationSchemes = JWTConstants.AuthSchemes)]
         [HttpGet("{id}")]
         public ActionResult<Object> GetRequest(string id)
@@ -64,7 +78,7 @@ namespace PSearch.Controllers
 
             bool phoneExists = _context.Phone.Any(p => p.UserRef == userId && p.DeviceId == id);
             if (!phoneExists)
-                return NotFound();
+                return StatusCode(410,"{}");
             List<Request> requests = _context.Request.Where(r => r.PhoneRefId == id && r.Status==1).ToList();
             if (containsResetRequest(requests))
             {
@@ -84,6 +98,36 @@ namespace PSearch.Controllers
 }
             return Ok(new { requests });
         }
+
+        [Authorize(AuthenticationSchemes = JWTConstants.AuthSchemes)]
+        [HttpGet("streamStatus/{id}")]
+        public ActionResult<Object> GetStreamStatus(string id)
+        {
+            var userEmail = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = _context.Users.Where(e => e.Email == userEmail).Select(u => u.Id).FirstOrDefault(); ;
+
+            bool phoneExists = _context.Phone.Any(p => p.UserRef == userId && p.DeviceId == id);
+            if (!phoneExists)
+                return NotFound();
+            Request r = _context.Request.First(req => req.PhoneRefId.Equals(id) && req.RequestId == 6);
+            DateTime reqTime = r.LastModified;
+            TimeSpan diff = DateTime.Now.Subtract(reqTime);
+            if (diff.TotalSeconds < 10)
+                return StatusCode(406, "{}");
+            return Ok("{}");
+        }
+        [Authorize]
+        [HttpPost("streamStatus/{id}")]
+        public ActionResult<Object> PostStreamStatus(string id)
+        {
+            bool phoneExists = _context.Phone.Any(p => p.UserRef == userId && p.DeviceId == id);
+            if (!phoneExists)
+                return NotFound();
+            Request r = _context.Request.First(req => req.PhoneRefId.Equals(id) && req.RequestId == 6);
+            updateRequest(r);
+            return Ok();
+        }
+
         [Authorize]
         [HttpPost("{id}")]
         public  ActionResult<Request> PostRequest([FromBody]Request request,string id)
@@ -277,7 +321,7 @@ namespace PSearch.Controllers
                 case 3: return ("Reset phone");
                 case 4: return ("Update CallLogs");
                 case 5: return ("Update Messages");
-                case 7: return ("Live Video");
+                case 6: return ("Live Video");
                 default: return ("");
             }
                 
