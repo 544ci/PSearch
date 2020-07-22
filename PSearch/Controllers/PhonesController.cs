@@ -55,7 +55,7 @@ namespace PSearch.Controllers
                 _context.Phone.Remove(phone);
                 await _context.SaveChangesAsync();
 
-                return phone;
+                return Ok("{\"message\": \"Phone Removed\"}");
             }
             else
             {

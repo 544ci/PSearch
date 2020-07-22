@@ -15,20 +15,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Autofac;
+using PSearch.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace PSearch
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IWebHostEnvironment env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
 
             if (env.IsDevelopment())
@@ -44,8 +48,9 @@ namespace PSearch
                       Configuration.GetConnectionString("AzureSQLServerConnection")));
 
             }
+            services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             //services.AddNodeServices();
             services.AddIdentityServer()
